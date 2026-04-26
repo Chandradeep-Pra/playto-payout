@@ -1,0 +1,60 @@
+:root {
+  --bg: #f6f9ff;
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-strong: #ffffff;
+  --surface-muted: #eef2ff;
+  --line: rgba(91, 106, 188, 0.14);
+  --line-strong: rgba(91, 106, 188, 0.24);
+  --text: #172033;
+  --muted: #617096;
+  --primary: #5a67f2;
+  --primary-deep: #434ed8;
+  --primary-soft: #eef0ff;
+  --accent: #6d5efc;
+  --success: #0f9f78;
+  --warning: #d18c18;
+  --danger: #d94169;
+  --shadow: 0 28px 60px rgba(78, 95, 174, 0.12);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --container: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Manrope", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(122, 141, 255, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(126, 99, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, #fbfcff 0%, #f4f7ff 100%);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+#app {
+  min-height: 100vh;
+}

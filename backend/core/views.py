@@ -2,10 +2,12 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from core.models import LedgerEntry, Payout
+from core.models import BankAccount, LedgerEntry, Merchant, Payout
 from core.selectors import get_available_balance, get_held_balance
 from core.serializers import (
+    BankAccountSerializer,
     LedgerEntrySerializer,
+    MerchantSerializer,
     PayoutRequestSerializer,
     PayoutSerializer,
 )
@@ -17,7 +19,14 @@ from core.services import (
 
 
 @api_view(["GET"])
-def balance_view(request):
+def merchant_list_view(request):
+    merchants = Merchant.objects.all().order_by("name")
+    serializer = MerchantSerializer(merchants, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def bank_account_list_view(request):
     merchant_id = request.query_params.get("merchant_id")
 
     if not merchant_id:
@@ -26,7 +35,22 @@ def balance_view(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    from core.models import Merchant
+    bank_accounts = BankAccount.objects.filter(
+        merchant_id=merchant_id
+    ).order_by("-is_default", "id")
+    serializer = BankAccountSerializer(bank_accounts, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def balance_view(request):
+    merchant_id = request.query_params.get("merchant_id")
+
+    if not merchant_id:
+        return Response(
+            {"detail": "merchant_id is required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     try:
         merchant = Merchant.objects.get(id=merchant_id)
@@ -107,8 +131,6 @@ def payout_list_create_view(request):
             {"detail": str(exc)},
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-    response_serializer = PayoutSerializer(payout)
 
     return Response(
         payout,
