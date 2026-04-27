@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a simplified payout engine similar to what platforms like Razorpay, Stripe, or PayPal internally use to manage merchant withdrawals safely.
+This project implements a simplified payout engine
 
 The system supports:
 
@@ -17,7 +17,7 @@ Instead of storing balances directly, the system follows a **ledger-based accoun
 
 ---
 
-# Core Design Philosophy
+# Core Design
 
 Instead of storing balances like:
 
@@ -37,8 +37,6 @@ This ensures:
 - easy rollback support
 - correct retry behavior
 - no floating balance corruption
-
-This approach is similar to how real payment processors maintain financial correctness.
 
 ---
 
@@ -128,8 +126,6 @@ stored response replay
 If the same key is reused with a different request body:
 
 request rejected
-
-This matches Stripe-style API behavior.
 
 ---
 
