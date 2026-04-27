@@ -2,13 +2,10 @@ import hashlib
 import json
 from datetime import timedelta
 
-from django.utils import timezone
-from django.db import IntegrityError
-
 from django.db import transaction
 from django.core.exceptions import ValidationError
-
 from django.utils import timezone
+
 from core.state_machine import validate_payout_transition
 
 from core.models import BankAccount, IdempotencyRecord, LedgerEntry, Merchant, Payout
@@ -82,9 +79,12 @@ def build_payout_response(payout):
         "status": payout.status,
         "idempotency_key": str(payout.idempotency_key),
         "attempts": payout.attempts,
+        "next_retry_at": payout.next_retry_at.isoformat() if payout.next_retry_at else None,
+        "last_processed_at": payout.last_processed_at.isoformat() if payout.last_processed_at else None,
         "created_at": payout.created_at.isoformat(),
         "updated_at": payout.updated_at.isoformat(),
     }
+
 
 @transaction.atomic
 def request_payout(*, merchant_id, amount_paise, bank_account_id, idempotency_key):
@@ -106,21 +106,19 @@ def request_payout(*, merchant_id, amount_paise, bank_account_id, idempotency_ke
         bank_account_id=bank_account_id,
     )
 
-    merchant = (
-        Merchant.objects
-        .select_for_update()
-        .get(id=merchant_id)
-    )
+    merchant = Merchant.objects.select_for_update().get(id=merchant_id)
 
     expires_at = timezone.now() + timedelta(hours=24)
 
-    idempotency_record, created = IdempotencyRecord.objects.select_for_update().get_or_create(
-        merchant=merchant,
-        key=idempotency_key,
-        defaults={
-            "request_hash": request_hash,
-            "expires_at": expires_at,
-        },
+    idempotency_record, created = (
+        IdempotencyRecord.objects.select_for_update().get_or_create(
+            merchant=merchant,
+            key=idempotency_key,
+            defaults={
+                "request_hash": request_hash,
+                "expires_at": expires_at,
+            },
+        )
     )
 
     if not created:

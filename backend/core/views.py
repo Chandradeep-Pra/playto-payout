@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core.exceptions import ValidationError
 
 from core.models import BankAccount, LedgerEntry, Merchant, Payout
 from core.selectors import get_available_balance, get_held_balance
@@ -118,6 +119,17 @@ def payout_list_create_view(request):
             amount_paise=serializer.validated_data["amount_paise"],
             bank_account_id=serializer.validated_data["bank_account_id"],
             idempotency_key=idempotency_key,
+        )
+    except Merchant.DoesNotExist:
+        return Response(
+            {"detail": "Merchant not found."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    except ValidationError as exc:
+        message = exc.message if hasattr(exc, "message") else str(exc)
+        return Response(
+            {"detail": message},
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     except InsufficientFundsError as exc:

@@ -70,6 +70,22 @@ Note:
 
 `--pool=solo` is required for Windows compatibility.
 
+## Start Everything At Once
+
+From inside the `backend` folder:
+
+```powershell
+.\start-dev.ps1
+```
+
+This opens separate PowerShell windows for:
+
+1. Django server
+2. Celery worker
+3. Celery beat
+
+Make sure Redis or Memurai is already running before using it.
+
 ## Run Tests
 
 ```powershell
@@ -85,3 +101,17 @@ Keep these running:
 3. Celery beat scheduler
 
 Project is now fully operational locally.
+
+## One-Command Startup
+
+From the project root:
+
+```powershell
+.\start-project.ps1
+```
+
+To reseed demo data during startup:
+
+```powershell
+.\start-project.ps1 -SeedDemo
+```

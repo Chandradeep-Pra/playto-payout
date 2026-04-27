@@ -1,4 +1,4 @@
-function formatCurrency(paise = 0) {
+export function formatCurrency(paise = 0) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
@@ -6,7 +6,7 @@ function formatCurrency(paise = 0) {
   }).format(paise / 100);
 }
 
-function formatDate(value) {
+export function formatDate(value) {
   if (!value) {
     return "Not processed yet";
   }
@@ -17,9 +17,19 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
-function formatCount(value = 0, noun = "item") {
-  const suffix = value === 1 ? noun : `${noun}s`;
-  return `${value} ${suffix}`;
+export function formatShortDate(value) {
+  if (!value) {
+    return "Pending";
+  }
+
+  return new Intl.DateTimeFormat("en-IN", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
 }
 
-export { formatCount, formatCurrency, formatDate };
+export function pluralize(value, word) {
+  return `${value} ${value === 1 ? word : `${word}s`}`;
+}

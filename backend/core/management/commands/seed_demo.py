@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 from django.core.management.base import BaseCommand
 
 from core.models import BankAccount, LedgerEntry, Merchant, Payout
@@ -17,19 +15,24 @@ class Command(BaseCommand):
 
         merchants_data = [
             {
-                "name": "Northstar Agency",
-                "email": "northstar@example.com",
+                "name": "Tata Retail Services",
+                "email": "finance@tataretail.in",
                 "credits": [50000, 25000, 10000],
             },
             {
-                "name": "PixelWorks Studio",
-                "email": "pixelworks@example.com",
+                "name": "Rupa Fashions Private Limited",
+                "email": "ops@rupafashions.in",
                 "credits": [75000, 15000],
             },
             {
-                "name": "Indie SaaS Co",
-                "email": "indiesaas@example.com",
+                "name": "Mahindra Digital Commerce",
+                "email": "settlements@mahindradigital.in",
                 "credits": [120000, 30000],
+            },
+            {
+                "name": "Infosys Business Solutions",
+                "email": "treasury@infosysbiz.in",
+                "credits": [95000, 45000],
             },
         ]
 
