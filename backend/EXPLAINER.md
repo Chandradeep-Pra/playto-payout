@@ -234,3 +234,6 @@ This payout engine demonstrates:
 The goal was to build something close to how real payout infrastructure behaves internally while keeping the implementation readable and testable.
 
 The concurrency test is intended to run on PostgreSQL because the implementation relies on row-level locking using `select_for_update()`. SQLite does not support the same row-level locking behavior and may throw database table lock errors during local concurrent test runs.
+
+#! IMPORTANT  
+## Please refer to [START.md](../START.md)
